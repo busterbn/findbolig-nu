@@ -1,1 +1,22 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+
+# Test coverage reports
+htmlcov/
+.coverage
+*.cover
+coverage.xml
+
+# Environment variables
 .env
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Pytest cache
+.pytest_cache/

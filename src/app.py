@@ -3,13 +3,17 @@ from bs4 import BeautifulSoup
 import time
 import random
 from twilio.rest import Client
+from dotenv import load_dotenv
 import os
 
-# Twilio Credentials
-ACCOUNT_SID = "AC48d5dc06d33cf1b4f0654f66435b8870"  # Replace with your Twilio account SID
-AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")         # Replace with your Twilio auth token
-TWILIO_PHONE_NUMBER = "+1234567890"  # Replace with your Twilio phone number
-YOUR_PHONE_NUMBER = "+1987654321"    # Replace with your personal phone number
+# Load environment variables from .env file
+load_dotenv()
+
+# Twilio Credentials loaded from .env
+ACCOUNT_SID = os.getenv("ACCOUNT_SID")  # Twilio Account SID
+AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")  # Twilio Auth Token
+TWILIO_PHONE_NUMBER = os.getenv("TWILIO_PHONE_NUMBER")  # Twilio Phone Number
+YOUR_PHONE_NUMBER = os.getenv("YOUR_PHONE_NUMBER")  # Your Personal Phone Number
 
 # URL to monitor
 URL = "https://www.findbolig.nu/da-dk/udlejere"
