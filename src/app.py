@@ -1,39 +1,51 @@
 import requests
 from bs4 import BeautifulSoup
 import time
+import random
 
-URL = "https://eksempel.dk/bolig"  # Indsæt det korrekte link
-HEADERS = {"User-Agent": "DinUserAgent"}  # Tilføj User-Agent for at undgå blokering
+# URL to monitor
+URL = "https://www.findbolig.nu/da-dk/udlejere"
 
-def tjek_om_lukket():
+# User-Agent header to mimic a browser
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"
+}
+
+# Function to check the number of occurrences of "lukket"
+def check_if_lukket_appears():
     try:
-        # Hent siden
+        # Fetch the page
         response = requests.get(URL, headers=HEADERS)
-        response.raise_for_status()  # Tjek for HTTP-fejl
+        response.raise_for_status()  # Check for HTTP errors
         soup = BeautifulSoup(response.content, "html.parser")
         
-        # Tjek om ordet "lukket" findes
-        if "lukket" in soup.get_text().lower():
-            return True
-        return False
+        # Count occurrences of the word "lukket"
+        page_text = soup.get_text().lower()
+        lukket_count = page_text.count("lukket")
+        print(f"'lukket' found {lukket_count} times on the page.")  # Log the count
+        
+        # Return True if it appears exactly 10 times
+        return lukket_count == 10
     except Exception as e:
-        print(f"Fejl ved forespørgsel: {e}")
+        print(f"Error while fetching the page: {e}")
         return None
 
-def send_besked():
-    print("Opskrivningen er ÅBEN! Tjek hjemmesiden med det samme!")
-    # Her kan du indsætte din beskedfunktion (e-mail, Telegram osv.)
+# Function to send an alert (replace this with your notification logic)
+def send_alert():
+    print("ALERT: 'lukket' no longer appears 10 times on the page! Check the website immediately!")
 
-# Loop til at holde øje med siden
+# Monitor the page in a loop
 while True:
-    status = tjek_om_lukket()
+    status = check_if_lukket_appears()
     if status is not None:
-        if not status:  # Hvis "lukket" IKKE findes
-            send_besked()
-            break  # Stop loopet, når beskeden er sendt
+        if not status:  # If "lukket" does not appear exactly 10 times
+            send_alert()
+            break  # Exit the loop after sending an alert
         else:
-            print("Opskrivningen er stadig lukket.")
+            print("'lukket' still appears 10 times. Monitoring continues.")
     else:
-        print("Kunne ikke tjekke siden. Prøver igen...")
-    
-    time.sleep(300)  # Vent 5 minutter før næste tjek
+        print("Could not check the page. Retrying...")
+
+    delay = random.randint(5, 10)
+    print(f"Waiting for {delay} seconds before the next check...")
+    time.sleep(delay)
