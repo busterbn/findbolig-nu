@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "app"
+version = "0.1.0"
+description = "A bot that monitors a website and notifies when conditions are met."
+authors = ["Buster Nielsen <busternielsen99@gmail.com>"]
+license = "Only i can use it"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+requests = "^2.31.0"
+beautifulsoup4 = "^4.12.2"
+python-telegram-bot = "^20.0"  # Optional: Use if sending notifications via Telegram
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.4.0"  # For testing your scraper
+
+[build-system]
+requires = ["poetry-core>=1.6.0"]
+build-backend = "poetry.core.masonry.api"
