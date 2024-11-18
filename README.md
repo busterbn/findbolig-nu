@@ -44,13 +44,6 @@ poetry install
 ```bash
 poetry run src/app.py
 ```
-
-#### Or if you're a pro, use make
-```bash
-make init  # Installs dependencies
-make run   # Starts the application
-```
-
 ---
 
 ### 2. Docker Deployment (Recommended)
@@ -68,17 +61,14 @@ TEST_MODE=False  # Set to True for testing
 make build
 ```
 
-#### Step 3: Run the Docker Container
+#### Step 3: Start the container
 ```bash
-make run
+make deploy
 ```
 
-#### Step 4: The application is now running
-
-
-For test mode, override the `TEST_MODE` environment variable:
+#### Step 4: Stop and remove the container
 ```bash
-make test
+make clean
 ```
 
 ---
