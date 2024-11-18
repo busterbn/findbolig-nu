@@ -1,12 +1,12 @@
 # findbolig-nu
 
-This application notifies you when external waiting lists open up on [findbolig.nu](https://www.findbolig.nu/).
+This application notifies you when the external waiting lists open up on [findbolig.nu](https://www.findbolig.nu/).
 
-## To-Do List
+## How to use
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/yourusername/findbolig-nu.git
+   git clone https://github.com/busterbn/findbolig-nu.git
    cd findbolig-nu
    ```
 
@@ -48,7 +48,7 @@ Execute the script:
 poetry run src/app.py
 ```
 
-Alternatively, you can use the Makefile for simplified commands:
+Alternatively, you can use the Makefile for simplified commands if you're a pro:
 ```bash
 make init  # Installs dependencies
 make run   # Runs the script
