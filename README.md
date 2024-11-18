@@ -1,4 +1,4 @@
-# FindBolig.nu external waitlist monitor
+# External Waitlist Tracker for FindBolig.nu
 
 This application monitors the external waiting lists on findbolig.nu and notifies you when their status changes. It works by repeatedly checking the webpage to determine if the word "lukket" appears exactly 10 times. Each "lukket" corresponds to a waiting list being closed. If the count is less than 10, it indicates that at least one of the waiting lists has opened.
 
