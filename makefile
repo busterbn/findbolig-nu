@@ -3,6 +3,7 @@ DOCKER_IMAGE=findbolig-nu
 DOCKER_TAG=latest
 PYTHON_FILE=src/app.py
 ENV_FILE=.env
+CONTAINER_NAME=findbolig-nu
 
 # Build the Docker image
 build:
@@ -11,6 +12,9 @@ build:
 # Run the Docker container with the .env file
 run:
 	docker run --env-file $(ENV_FILE) $(DOCKER_IMAGE):$(DOCKER_TAG)
+
+deploy:
+	docker run --name $(CONTAINER_NAME) --env-file $(ENV_FILE) -d $(DOCKER_IMAGE):$(DOCKER_TAG)
 
 # Run the Docker container in test mode
 test:
