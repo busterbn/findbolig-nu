@@ -4,43 +4,56 @@ This application notifies you when external waiting lists open up on [findbolig.
 
 ## How to Deploy the Script
 
-1. **Sign up for Twilio:**
-   - Create a [Twilio account](https://www.twilio.com/) and get your Twilio credentials:
-     - **Account SID**
-     - **Auth Token**
-   - Purchase a Twilio phone number to make calls or send SMS.
+1. **Set Up a Pushover Account:**
+   - Create a [Pushover account](https://pushover.net/) and get your credentials:
+     - **User Key**
+     - **API Token**
+   - Download the Pushover app to your iPhone from the [App Store](https://apps.apple.com/app/pushover-notifications/id506088175).
 
 2. **Set Up the Environment:**
    Export the necessary environment variables to keep your credentials secure. Run the following commands in your terminal:
 
    ```bash
-   export TWILIO_AUTH_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXX      # Replace with your Twilio Auth Token
-   export ACCOUNT_SID=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX      # Replace with your Twilio Account SID
-   export TWILIO_PHONE_NUMBER="+1234567890"                 # Replace with your Twilio phone number
-   export YOUR_PHONE_NUMBER="+1987654321"                   # Replace with your personal phone number
+   export PUSHOVER_USER_KEY=your_user_key_here      # Replace with your Pushover User Key
+   export PUSHOVER_API_TOKEN=your_api_token_here    # Replace with your Pushover API Token
+   ```
 
-3. **Install Poetry: Ensure you have Poetry installed. If not, install it using the following command:**
+3. **Install Poetry:**
+   Ensure you have Poetry installed. If not, install it using the following command:
 
-    ```bash
-    curl -sSL https://install.python-poetry.org | python3 -
+   ```bash
+   curl -sSL https://install.python-poetry.org | python3 -
+   ```
 
-4. **Confirm the installation:**
+   Confirm the installation:
 
-    ```bash
-    poetry --version
+   ```bash
+   poetry --version
+   ```
 
-4. **Set Up the Project: Navigate to the project directory and install the dependencies using Poetry:**
+4. **Set Up the Project:**
+   Navigate to the project directory and install the dependencies using Poetry:
 
-    ```bash
-    poetry install
-    
-5. **Activate the virtual environment:**
+   ```bash
+   poetry install
+   ```
 
-    ```bash
-    poetry shell
-6. **Run the Script: Execute the script within the Poetry-managed environment:**
+   Activate the virtual environment:
 
-    ```bash
-    python script_name.py
+   ```bash
+   poetry shell
+   ```
 
-7. **Receive Notifications: The script will call your phone number when the waiting lists open.**
+5. **Run the Script:**
+   Execute the script within the Poetry-managed environment:
+
+   ```bash
+   python script_name.py
+   ```
+
+6. **Receive Notifications:**
+   When the waiting lists open, you will receive a Pushover notification with an alarm sound on your iPhone.
+
+## Notes
+- Replace placeholder values (e.g., `your_user_key_here`, `your_api_token_here`) with your actual Pushover credentials.
+- Ensure that your `.env` file is kept secure and is listed in `.gitignore` to prevent sensitive information from being committed.

@@ -2,18 +2,15 @@ import requests
 from bs4 import BeautifulSoup
 import time
 import random
-from twilio.rest import Client
 from dotenv import load_dotenv
 import os
 
 # Load environment variables from .env file
 load_dotenv()
+PUSHOVER_USER_KEY = os.getenv("PUSHOVER_USER_KEY")  # Your Pushover User Key
+PUSHOVER_API_TOKEN = os.getenv("PUSHOVER_API_TOKEN")  # Your Pushover API Token
+TEST_MODE = os.getenv("TEST_MODE", "False").lower() == "true"  # Enable if TEST_MODE=True in .env or runtime
 
-# Twilio Credentials loaded from .env
-ACCOUNT_SID = os.getenv("ACCOUNT_SID")  # Twilio Account SID
-AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")  # Twilio Auth Token
-TWILIO_PHONE_NUMBER = os.getenv("TWILIO_PHONE_NUMBER")  # Twilio Phone Number
-YOUR_PHONE_NUMBER = os.getenv("YOUR_PHONE_NUMBER")  # Your Personal Phone Number
 
 # URL to monitor
 URL = "https://www.findbolig.nu/da-dk/udlejere"
@@ -22,6 +19,8 @@ URL = "https://www.findbolig.nu/da-dk/udlejere"
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"
 }
+
+check_count = 0
 
 # Function to check the number of occurrences of "lukket"
 def check_if_lukket_appears():
@@ -42,23 +41,42 @@ def check_if_lukket_appears():
         print(f"Error while fetching the page: {e}")
         return None
 
-# Function to make a phone call
-def make_phone_call():
-    client = Client(ACCOUNT_SID, AUTH_TOKEN)
-    
-    call = client.calls.create(
-        to=YOUR_PHONE_NUMBER,
-        from_=TWILIO_PHONE_NUMBER,
-        twiml="<Response><Say>'Lukket' no longer appears 10 times on the page. Check the website immediately!</Say></Response>"
-    )
-    print(f"Call initiated: SID {call.sid}")
+# Function to send a Pushover notification
+def send_pushover_notification():
+    try:
+        url = "https://api.pushover.net/1/messages.json"
+        payload = {
+            "token": PUSHOVER_API_TOKEN,
+            "user": PUSHOVER_USER_KEY,
+            "message": "'Lukket' no longer appears 10 times on the page. Check the website immediately!",
+            "title": "Website Alert",
+            "priority": 1,  # High priority
+            "sound": "siren"  # Use the 'siren' sound for an alarm
+        }
+        response = requests.post(url, data=payload)
+        if response.status_code == 200:
+            print("Pushover notification sent.")
+        else:
+            print(f"Failed to send Pushover notification: {response.text}")
+    except Exception as e:
+        print(f"Error sending Pushover notification: {e}")
 
 # Monitor the page in a loop with random intervals
 while True:
+    check_count
+    check_count += 1  # Increment the counter for each check
+
+    # Test mode: Trigger notification on the 3rd check
+    if TEST_MODE and check_count == 2:
+        print("Test mode: Sending notification after the 2. check.")
+        send_pushover_notification()
+        break
+
+    # Check the page normally
     status = check_if_lukket_appears()
     if status is not None:
         if not status:  # If "lukket" does not appear exactly 10 times
-            make_phone_call()
+            send_pushover_notification()
             break  # Exit the loop after sending an alert
         else:
             print("'lukket' still appears 10 times. Monitoring continues.")
