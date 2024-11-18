@@ -36,19 +36,20 @@ Ensure you have Poetry installed. If not, install it using the following command
 pip install poetry
 ```
 
-#### Step 2: Set Up the Project
-Install the dependencies:
+#### Step 2: Install the dependencies
+Execute the following command:
 ```bash
 poetry install
 ```
 
-#### Step 3: Run the Script
-Execute the script:
+#### Step 3: Start the application
+Execute the following command:
 ```bash
 poetry run src/app.py
 ```
 
-Alternatively, you can use the Makefile for simplified commands if you're a pro:
+#### Or if you're a pro
+Let make do it by execute the following commands:
 ```bash
 make init  # Installs dependencies
 make run   # Runs the script
@@ -56,7 +57,7 @@ make run   # Runs the script
 
 ---
 
-### 2. Docker Deployment
+### 2. Docker Deployment (Recommended)
 
 #### Step 1: Create a `.env` File
 Create a `.env` file in the project root and add your Pushover credentials:
@@ -72,7 +73,6 @@ make build
 ```
 
 #### Step 3: Run the Docker Container
-Run the application with your `.env` file:
 ```bash
 make run
 ```
