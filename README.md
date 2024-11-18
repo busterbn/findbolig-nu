@@ -1,6 +1,10 @@
-# findbolig-nu
+# FindBolig.nu external waitlist monitor
 
-This application notifies you when the external waiting lists open up on [findbolig.nu](https://www.findbolig.nu/).
+This application monitors the external waiting lists on findbolig.nu and notifies you when their status changes. It works by repeatedly checking the webpage to determine if the word "lukket" appears exactly 10 times. Each "lukket" corresponds to a waiting list being closed. If the count is less than 10, it indicates that at least one of the waiting lists has opened.
+
+The program runs checks at random intervals between 5 and 10 seconds to balance timely updates with efficient resource usage. When a change is detected, the application sends a notification via Pushover, a free app available for iPhone, Android, and other platforms. This ensures you are alerted immediately when a waiting list opens.
+
+Stay informed effortlessly with this automated notification system!
 
 ## How to use
 
