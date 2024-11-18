@@ -31,25 +31,21 @@ This application notifies you when the external waiting lists open up on [findbo
 ### 1. Local Deployment
 
 #### Step 1: Install Poetry
-Ensure you have Poetry installed. If not, install it using the following command:
 ```bash
 pip install poetry
 ```
 
 #### Step 2: Install the dependencies
-Execute the following command:
 ```bash
 poetry install
 ```
 
 #### Step 3: Start the application
-Execute the following command:
 ```bash
 poetry run src/app.py
 ```
 
-#### Or if you're a pro
-Let make do it by execute the following commands:
+#### Or if you're a pro, use make
 ```bash
 make init  # Installs dependencies
 make run   # Runs the script
