@@ -48,7 +48,7 @@ poetry run src/app.py
 #### Or if you're a pro, use make
 ```bash
 make init  # Installs dependencies
-make run   # Runs the script
+make run   # Starts the application
 ```
 
 ---
@@ -72,6 +72,9 @@ make build
 ```bash
 make run
 ```
+
+#### Step 4: The application is now running
+
 
 For test mode, override the `TEST_MODE` environment variable:
 ```bash
