@@ -66,9 +66,15 @@ make build
 make deploy
 ```
 
-#### Step 4: Stop and remove the container
+#### Step 4: View log
+```bash
+make log
+```
+
+#### Step 5: Stop and remove the container
 ```bash
 make clean
+make prune
 ```
 
 ---
