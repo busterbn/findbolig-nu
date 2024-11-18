@@ -2,58 +2,84 @@
 
 This application notifies you when external waiting lists open up on [findbolig.nu](https://www.findbolig.nu/).
 
-## How to Deploy the Script
+## To-Do List
 
-1. **Set Up a Pushover Account:**
-   - Create a [Pushover account](https://pushover.net/) and get your credentials:
-     - **User Key**
-     - **API Token**
-   - Download the Pushover app to your iPhone from the [App Store](https://apps.apple.com/app/pushover-notifications/id506088175).
-
-2. **Set Up the Environment:**
-   Export the necessary environment variables to keep your credentials secure. Run the following commands in your terminal:
-
+1. **Clone the Repository:**
    ```bash
-   export PUSHOVER_USER_KEY=your_user_key_here      # Replace with your Pushover User Key
-   export PUSHOVER_API_TOKEN=your_api_token_here    # Replace with your Pushover API Token
+   git clone https://github.com/yourusername/findbolig-nu.git
+   cd findbolig-nu
    ```
 
-3. **Install Poetry:**
-   Ensure you have Poetry installed. If not, install it using the following command:
+2. **Sign Up for Pushover:**
+   - Create a [Pushover account](https://pushover.net/).
+   - Generate a **User Key** and **API Token** by creating a service in Pushover.
 
-   ```bash
-   curl -sSL https://install.python-poetry.org | python3 -
-   ```
+3. **Set Up Environment Variables:**
+   - Export the necessary environment variables to keep your credentials secure. Run the following commands in your terminal:
+     ```bash
+     export PUSHOVER_USER_KEY=your_user_key_here      # Replace with your Pushover User Key
+     export PUSHOVER_API_TOKEN=your_api_token_here    # Replace with your Pushover API Token
+     ```
 
-   Confirm the installation:
+4. **Choose a Deployment Option**:
+   - Proceed with either **Local Deployment** or **Docker Deployment** as described below.
 
-   ```bash
-   poetry --version
-   ```
+---
 
-4. **Set Up the Project:**
-   Navigate to the project directory and install the dependencies using Poetry:
+## Deployment Options
 
-   ```bash
-   poetry install
-   ```
+### 1. Local Deployment
 
-   Activate the virtual environment:
+#### Step 1: Install Poetry
+Ensure you have Poetry installed. If not, install it using the following command:
+```bash
+pip install poetry
+```
 
-   ```bash
-   poetry shell
-   ```
+#### Step 2: Set Up the Project
+Install the dependencies:
+```bash
+poetry install
+```
 
-5. **Run the Script:**
-   Execute the script within the Poetry-managed environment:
+#### Step 3: Run the Script
+Execute the script:
+```bash
+poetry run src/app.py
+```
 
-   ```bash
-   python script_name.py
-   ```
+Alternatively, you can use the Makefile for simplified commands:
+```bash
+make init  # Installs dependencies
+make run   # Runs the script
+```
 
-6. **Receive Notifications:**
-   When the waiting lists open, you will receive a Pushover notification with an alarm sound on your iPhone.
+---
 
-## Notes
-- Replace placeholder values (e.g., `your_user_key_here`, `your_api_token_here`) with your actual Pushover credentials.
-- Ensure that your `.env` file is kept secure and is listed in `.gitignore` to prevent sensitive information from being committed.
+### 2. Docker Deployment
+
+#### Step 1: Create a `.env` File
+Create a `.env` file in the project root and add your Pushover credentials:
+```env
+PUSHOVER_USER_KEY=your_user_key_here
+PUSHOVER_API_TOKEN=your_api_token_here
+TEST_MODE=False  # Set to True for testing
+```
+
+#### Step 2: Build the Docker Image
+```bash
+make build
+```
+
+#### Step 3: Run the Docker Container
+Run the application with your `.env` file:
+```bash
+make run
+```
+
+For test mode, override the `TEST_MODE` environment variable:
+```bash
+make test
+```
+
+---
