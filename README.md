@@ -11,7 +11,7 @@ This application notifies you when the external waiting lists open up on [findbo
    ```
 
 2. **Sign Up for Pushover:**
-   - Download pushover from the appstore in your iPhone.
+   - Download pushover on your iPhone.
    - Create a [Pushover account](https://pushover.net/).
    - Generate a **User Key** and **API Token** by creating a service in Pushover.
 
