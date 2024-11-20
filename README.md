@@ -78,8 +78,7 @@ make log
 
 #### Step 5: Stop and remove the container
 ```bash
-make clean
-make prune
+make stop
 ```
 
 ---
