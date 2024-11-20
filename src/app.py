@@ -4,13 +4,12 @@ import time
 import random
 from dotenv import load_dotenv
 import os
+from datetime import datetime
 
 # Load environment variables from .env file
 load_dotenv()
 PUSHOVER_USER_KEY = os.getenv("PUSHOVER_USER_KEY")  # Your Pushover User Key
 PUSHOVER_API_TOKEN = os.getenv("PUSHOVER_API_TOKEN")  # Your Pushover API Token
-TEST_MODE = os.getenv("TEST_MODE", "False").lower() == "true"  # Enable if TEST_MODE=True in .env or runtime
-
 
 # URL to monitor
 URL = "https://www.findbolig.nu/da-dk/udlejere"
@@ -20,25 +19,37 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"
 }
 
-check_count = 0
+# Function to log errors
+def log_error(error_message):
+    with open("error_log.txt", "a") as log_file:
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        log_file.write(f"[{timestamp}] {error_message}\n")
+        print(f"Logged error: {error_message}")
 
-# Function to check the number of occurrences of "lukket"
-def check_if_lukket_appears():
+# Function to check occurrences of "lukket" and "åben"
+def check_page_content():
     try:
         # Fetch the page
         response = requests.get(URL, headers=HEADERS)
         response.raise_for_status()  # Check for HTTP errors
         soup = BeautifulSoup(response.content, "html.parser")
         
-        # Count occurrences of the word "lukket"
+        # Count occurrences of the words "lukket" and "åben"
         page_text = soup.get_text().lower()
         lukket_count = page_text.count("lukket")
-        print(f"'lukket' found {lukket_count} times on the page.")  # Log the count
+        aaben_count = page_text.count("åben")
         
-        # Return True if it appears exactly 10 times
-        return lukket_count == 10
+        print(f"'lukket' found {lukket_count} times on the page.")  # Log the count for "lukket"
+        print(f"'åben' found {aaben_count} times on the page.")  # Log the count for "åben"
+        
+        # Check both conditions
+        lukket_condition = lukket_count != 10
+        aaben_condition = aaben_count >= 1
+        
+        return lukket_condition and aaben_condition
     except Exception as e:
-        print(f"Error while fetching the page: {e}")
+        error_message = f"Error while fetching the page: {e}"
+        log_error(error_message)  # Log the error
         return None
 
 # Function to send a Pushover notification
@@ -48,7 +59,7 @@ def send_pushover_notification():
         payload = {
             "token": PUSHOVER_API_TOKEN,
             "user": PUSHOVER_USER_KEY,
-            "message": "'Lukket' no longer appears 10 times on the page. Check the website immediately!",
+            "message": "'lukket' and 'åben' conditions met on the monitored page!",
             "title": "Website Alert",
             "priority": 1,  # High priority
             "sound": "siren"  # Use the 'siren' sound for an alarm
@@ -57,33 +68,34 @@ def send_pushover_notification():
         if response.status_code == 200:
             print("Pushover notification sent.")
         else:
-            print(f"Failed to send Pushover notification: {response.text}")
+            error_message = f"Failed to send Pushover notification: {response.text}"
+            log_error(error_message)  # Log the error
     except Exception as e:
-        print(f"Error sending Pushover notification: {e}")
+        error_message = f"Error sending Pushover notification: {e}"
+        log_error(error_message)  # Log the error
 
-# Monitor the page in a loop with random intervals
-while True:
-    check_count
-    check_count += 1  # Increment the counter for each check
+# Main monitoring function
+def monitor_page():
+    check_count = 0
+    while True:
+        check_count += 1  # Increment the counter for each check
 
-    # Test mode: Trigger notification on the 3rd check
-    if TEST_MODE and check_count == 2:
-        print("Test mode: Sending notification after the 2. check.")
-        send_pushover_notification()
-        break
-
-    # Check the page normally
-    status = check_if_lukket_appears()
-    if status is not None:
-        if not status:  # If "lukket" does not appear exactly 10 times
+        # Check the page content
+        status = check_page_content()
+        if status is None:
+            print("Could not check the page. Retrying...")
+        elif status:  # If both conditions are met
             send_pushover_notification()
-            break  # Exit the loop after sending an alert
+            print("Notification sent. Waiting for 15 seconds before resuming monitoring...")
+            time.sleep(15)  # Wait for 15 seconds before continuing
         else:
-            print("'lukket' still appears 10 times. Monitoring continues.")
-    else:
-        print("Could not check the page. Retrying...")
+            print("'lukket' and 'åben' conditions are not met. Monitoring continues.")
 
-    # Wait for a random interval between 5 and 10 seconds
-    delay = random.randint(5, 10)
-    print(f"Waiting for {delay} seconds before the next check...")
-    time.sleep(delay)
+        # Wait for a random interval between 5 and 10 seconds
+        delay = random.randint(5, 10)
+        print(f"Waiting for {delay} seconds before the next check...")
+        time.sleep(delay)
+
+# Entry point
+if __name__ == "__main__":
+    monitor_page()
