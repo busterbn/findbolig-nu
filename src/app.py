@@ -44,7 +44,7 @@ def check_page_content():
         
         # Check both conditions
         lukket_condition = lukket_count != 10
-        aaben_condition = aaben_count >= 1
+        aaben_condition = aaben_count > 1
         
         return lukket_condition and aaben_condition
     except Exception as e:
