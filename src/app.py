@@ -21,10 +21,20 @@ HEADERS = {
 
 # Function to log errors
 def log_error(error_message):
-    with open("error_log.txt", "a") as log_file:
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        log_file.write(f"[{timestamp}] {error_message}\n")
-        print(f"Logged error: {error_message}")
+    log_message(error_message, "error_log.txt")
+
+# Function to log messages
+def log_message(message, filename=None):
+    now = datetime.now()
+    log_dir = os.path.join("logs", now.strftime("%Y"), now.strftime("%m"))
+    os.makedirs(log_dir, exist_ok=True)
+    if filename is None:
+        filename = now.strftime("%Y-%m-%d") + ".txt"
+    log_file_path = os.path.join(log_dir, filename)
+    with open(log_file_path, "a") as log_file:
+        timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
+        log_file.write(f"[{timestamp}] {message}\n")
+        print(f"Logged message: {message}")
 
 # Function to check occurrences of "lukket" and "åben"
 def check_page_content():
@@ -39,8 +49,8 @@ def check_page_content():
         lukket_count = page_text.count("lukket")
         aaben_count = page_text.count("åben")
         
-        print(f"'lukket' found {lukket_count} times on the page.")  # Log the count for "lukket"
-        print(f"'åben' found {aaben_count} times on the page.")  # Log the count for "åben"
+        # log_message(f"'lukket' found {lukket_count} times.")
+        # log_message(f"'åben' found {aaben_count} times.")
         
         # Check both conditions
         lukket_condition = lukket_count != 10
@@ -66,7 +76,7 @@ def send_pushover_notification():
         }
         response = requests.post(url, data=payload)
         if response.status_code == 200:
-            print("Pushover notification sent.")
+            log_message("Pushover notification sent.")
         else:
             error_message = f"Failed to send Pushover notification: {response.text}"
             log_error(error_message)  # Log the error
@@ -76,24 +86,19 @@ def send_pushover_notification():
 
 # Main monitoring function
 def monitor_page():
-    check_count = 0
     while True:
-        check_count += 1  # Increment the counter for each check
-
-        # Check the page content
         status = check_page_content()
         if status is None:
-            print("Could not check the page. Retrying...")
+            log_message("Could not check the page. Retrying...")
         elif status:  # If both conditions are met
             send_pushover_notification()
-            print("Notification sent. Waiting for 15 seconds before resuming monitoring...")
+            log_message("Notification sent. Waiting for 15 seconds before resuming monitoring...")
             time.sleep(15)  # Wait for 15 seconds before continuing
         else:
-            print("'lukket' and 'åben' conditions are not met. Monitoring continues.")
+            log_message("Lists are closed.")
 
         # Wait for a random interval between 5 and 10 seconds
         delay = random.randint(5, 10)
-        print(f"Waiting for {delay} seconds before the next check...")
         time.sleep(delay)
 
 # Entry point

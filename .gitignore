@@ -20,3 +20,5 @@ coverage.xml
 
 # Pytest cache
 .pytest_cache/
+
+logs/
