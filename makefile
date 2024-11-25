@@ -20,3 +20,8 @@ stop:
 # Logs
 logs:
 	docker logs -f $(CONTAINER_NAME)
+
+copy-logs:
+	docker cp $(CONTAINER_NAME):/app/logs/ ./logs
+
+.PHONY: build deploy stop logs copy-logs
